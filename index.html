@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Web Movie App</title>
+    <style>
+      /* Write necessery styles here  */
+      button{
+        margin: auto;
+        border: 1px solid red;
+        color: black;
+        font-size: 20px;
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: rgb(226, 43, 144);
+        width: 100px;
+        height: 40px;
+        margin-left: 10px;
+        margin-top: 15px;
+      }
+      input{
+        width: 400px;
+        height: 30px;
+      }
+      #serach{
+        margin: auto;
+        width: 90%;
+        text-align: center;
+        margin-bottom: 25px;
+      }
+      #movie_container{
+        display: grid;
+        gap: 15px;
+        grid-template-columns: repeat(4,1fr);
+        margin: auto;
+        width: 90%;
+      }
+      .poster{
+        width: 100%;
+      }
+      .title{
+        text-align: center;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="serach">
+      <input type="text" id="search-inp" placeholder="Search"/>
+      <button id="search-btn">Search</button>
+    </div>
+    <div id="movie_container"></div>
+  </body>
+
+  <script>
+    // Write necessery JS here
+
+    let btn=document.getElementById("search-btn");
+    let ibox=document.getElementById("search-inp");
+    let cont=document.getElementById("movie_container");
+
+    //let myapi="http://www.omdbapi.com/?apikey=cd645cf8";
+    //let myapi="https://www.omdbapi.com/?apiKey=cd645cf8&s=
+
+    // btn.addEventListener("click",function(){
+    //   fetch(`${myapi}&s=${ibox.value}`)
+    //   .then( (res) =>{
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     console.log(data);
+    //     Display(data.Search);
+    //   })
+    //   .catch(() =>{
+    //     showError();
+    //   })
+    // })
+
+    btn.addEventListener("click",function (){
+      fetchdata();
+    })
+
+    async function fetchdata(){
+      try {
+        let req=await fetch(`https://www.omdbapi.com/?apiKey=cd645cf8&s=${ibox.value}`);
+        //console.log(req);
+        let data=await req.json();
+        //console.log(data);
+        Display(data.Search);
+      } catch (error) {
+        console.log(error)
+        showError()
+      }
+    }
+    
+    function showError(){
+      cont.innerHTML=null;
+      let htag=document.createElement("h2");
+      htag.innerText="Movie not found!";
+      htag.setAttribute("class","error-container");
+      cont.append(htag);
+    }
+
+    function Display(data){
+
+      cont.innerHTML=null;
+
+      data.forEach((element) => {
+
+        let Div=document.createElement("div");
+        Div.setAttribute("id","subdiv");
+
+        let imag=document.createElement("img");
+        imag.setAttribute("src",element.Poster);
+        imag.setAttribute("class","poster");
+
+        let heading=document.createElement("h2");
+        heading.innerText=element.Title;
+        heading.setAttribute("class","title");
+
+        Div.append(imag,heading);
+        cont.append(Div);
+
+      });
+
+    }
+
+  </script>
+</html>
